@@ -2,13 +2,12 @@
 
 ### [ASKING STAGE] Questions for the project:
 
-# 1.0) What is the distribution of dataset in terms of: age, sex, race, etc.
-# 1.1) Do people with higher education tend to have higher income?
-# 1.2) Find the trends between how many books do people usually read depends
-# on their: age, sex, race, marital status, etc.
-# 1.3) What kind of books do people prefer? e-book, printed, or audio books?
-# 1.4) Is there any correlation between people’s employment and reading? 
-# 1.5) Do employed individuals read more or less compared to unemployment ones?
+# 1. What is the distribution of dataset in terms of: age, sex, race, etc.
+# 2. Do people with higher education tend to have higher income?
+# 3. Find the trends between how many books do people usually read depends on their: age, sex, race, marital status, etc.
+# 4. What kind of books do people prefer? e-book, printed, or audio books?
+# 5. Is there any correlation between people’s employment and reading? 
+# 6. Do employed individuals read more or less compared to unemployment ones?
 
 ### [PREPARE DATA] Load packages, get to know with data
 
@@ -28,6 +27,7 @@ df <- clean_names(df) # Removing unnecessary space and upper case from cols
 colnames(df)
 
 # Shorten col names for the convenience
+
 df <- df %>% 
   rename(
   read_books_12mon = "how_many_books_did_you_read_during_last_12months",
@@ -43,8 +43,8 @@ lapply(df, unique)
 colSums(is.na(df))[colSums(is.na(df)) > 0] # Time to spot cols with NA values
 sum(is.na(df)) # Total NA is 1.560 
 
-# I prefer to write a function which shortens the following process
-# 'smart_count' shows counted responses for specific columns
+# I prefer to write a function which shortens the following process 'smart_count' shows counted responses for specific columns
+
 smart_count <- function(data, col_name) {
   result <- data %>%
     group_by(across({{col_name}})) %>%
@@ -55,22 +55,26 @@ smart_count <- function(data, col_name) {
 }
 
 # Our cols with NA values
+
 smart_count(df, 'read_p_books_12mon')
 smart_count(df, 'read_a_books_12mon')
 smart_count(df, 'read_e_books_12mon')
 smart_count(df, 'last_book_you_read_you')
 
 # Pulling NA into "Don't know"
+
 df$read_p_books_12mon[is.na(df$read_p_books_12mon)] <- "Don’t know"
 df$read_e_books_12mon[is.na(df$read_e_books_12mon)] <- "Don’t know"
 df$read_a_books_12mon[is.na(df$read_a_books_12mon)] <- "Don’t know"
 
 # Uniting 2 similar responses into one (there's an error '>9<$100,000')
+
 df$incomes <- ifelse(
   df$incomes %in% c('9$100,000 to under $150,000'), 
   '$100,000 to under $150,000', df$incomes)
 
 # Creating "Don't know" response for wrong answers '8', '9', and NA values
+
 smart_count(df, 'last_book_you_read_you') # last book you read responses
 
 df$last_book_you_read_you <- ifelse(
@@ -79,6 +83,7 @@ df$last_book_you_read_you <- ifelse(
   df$last_book_you_read_you)
 
 # Making sure everything is in order and I got rid of mistakes
+
 colSums(is.na(df))[colSums(is.na(df)) > 0]
 lapply(df, unique)
 
@@ -86,12 +91,13 @@ lapply(df, unique)
 
 ### [ANALYSIS STAGE]
 
-# 1.0) What is the distribution of dataset in terms of: age, sex, race, etc.
+# 1. What is the distribution of dataset in terms of: age, sex, race, etc.
 
 colnames(df)
 summary(df)
 
 # Age distribution
+
 sd(df$age)
 quantile(df$age, 0.25)
 quantile(df$age, 0.75)
@@ -127,8 +133,7 @@ boxplot(df$age[df$sex == 'Female'],
 
 par(mfrow = c(1, 1)) # clear parameter
 
-## {Age & Sex Conclusion}: The age of men participating in the survey is lower 
-## than women
+## {Age & Sex Conclusion}: The age of men participating in the survey is lower than women
 
 # Race Distribution
 
@@ -141,8 +146,7 @@ df %>%
   labs(title = 'Race Distribution', xlab = 'Total Number', ylab = 'Race') +
   theme_minimal()
 
-## {Race Conclusion}: we see that white and black or african american races are
-## the most frequently participating races in this survey.
+## {Race Conclusion}: we see that white and black or african american races are the most frequently participating races in this survey.
 
 df %>% 
   group_by(marital_status) %>% 
