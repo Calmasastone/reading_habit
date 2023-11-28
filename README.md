@@ -1,6 +1,4 @@
-[Early access - in progress]
-
-This project shows various patterns regarding reading habits:
+This project shows various patterns regarding reading habits (Early access - in progress):
 
 1. What is the distribution of dataset in terms of: age, sex, race, etc.
 2. Do people with higher education tend to have higher income?
