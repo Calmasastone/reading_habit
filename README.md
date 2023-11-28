@@ -1,1 +1,3 @@
-# reading_habit
+[Early access - in progress]
+
+This project 
