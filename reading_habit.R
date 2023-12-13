@@ -13,7 +13,7 @@
 
 pacman::p_load(tidyverse, summarytools, janitor)
 
-df <- read_csv('C:/Users/anzhu/OneDrive/Документы/R/Studies/reading_habit.csv')
+df <- read_csv('https://raw.githubusercontent.com/Calmasastone/reading_habit/main/reading_habit.csv')
 
 head(df)
 dim(df)
