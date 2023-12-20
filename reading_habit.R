@@ -31,12 +31,12 @@ colnames(df)
 
 df <- df |> 
   rename(
-  read_books_12mon = "how_many_books_did_you_read_during_last_12months",
-  read_p_books_12mon = "read_any_printed_books_during_last_12months",
-  read_e_books_12mon = "read_any_e_books_during_last_12months",
-  read_a_books_12mon = "read_any_audiobooks_during_last_12months",
-  do_you_read_news_newspapers = "do_you_happen_to_read_any_daily_news_or_newspapers",
-  do_you_read_magazines_journals = "do_you_happen_to_read_any_magazines_or_journals")
+  read_books_12mon = 'how_many_books_did_you_read_during_last_12months',
+  read_p_books_12mon = 'read_any_printed_books_during_last_12months',
+  read_e_books_12mon = 'read_any_e_books_during_last_12months',
+  read_a_books_12mon = 'read_any_audiobooks_during_last_12months',
+  do_you_read_news_newspapers = 'do_you_happen_to_read_any_daily_news_or_newspapers',
+  do_you_read_magazines_journals = 'do_you_happen_to_read_any_magazines_or_journals')
 
 colnames(df)
 
@@ -59,11 +59,11 @@ smart_count(df, read_a_books_12mon)
 smart_count(df, read_e_books_12mon)
 smart_count(df, last_book_you_read_you)
 
-# Pulling NA into "Don't know"
+# Pulling NA into 'Don't know'
 
-df$read_p_books_12mon[is.na(df$read_p_books_12mon)] <- "Don’t know"
-df$read_e_books_12mon[is.na(df$read_e_books_12mon)] <- "Don’t know"
-df$read_a_books_12mon[is.na(df$read_a_books_12mon)] <- "Don’t know"
+df$read_p_books_12mon[is.na(df$read_p_books_12mon)] <- 'Don’t know'
+df$read_e_books_12mon[is.na(df$read_e_books_12mon)] <- 'Don’t know'
+df$read_a_books_12mon[is.na(df$read_a_books_12mon)] <- 'Don’t know'
 
 # Uniting 2 similar responses into one (there's an error '>9<$100,000')
 
@@ -71,13 +71,13 @@ df$incomes <- ifelse(
   df$incomes %in% c('9$100,000 to under $150,000'), 
   '$100,000 to under $150,000', df$incomes)
 
-# Creating "Don't know" response for wrong answers '8', '9', and NA values
+# Creating 'Don't know' response for wrong answers '8', '9', and NA values
 
 smart_count(df, last_book_you_read_you) # last book you read responses
 
 df$last_book_you_read_you <- ifelse(
   df$last_book_you_read_you %in% c(NA, '8', '9',''),
-  "Don’t know",
+  'Don’t know',
   df$last_book_you_read_you)
 
 # Making sure everything is in order and I got rid of mistakes
@@ -97,35 +97,27 @@ descr(df) # 50% of the survey population lies between 32 and 62 years old
 
 # Age distribution
 
-par(mfrow = c(2, 1)) # 2 rows & 1 col for the graph
+df |> 
+  ggplot(aes(x = age, fill = sex)) +
+  geom_density(linewidth = 1, alpha = 0.5) +
+  labs(x = 'Age', y = 'Number of People') +
+  facet_wrap(~sex) +
+  xlim(0, 100) +
+  scale_fill_manual(values = c('Male' = 'skyblue', 'Female' = 'pink'))
 
-hist(df$age[df$sex == 'Male'],
-     xlim = c(0, 100),
-     main = 'Age Distribution for Males',
-     xlab = 'Age',
-     col = 'blue2')
+df |> 
+  ggplot(aes(x = age, fill = sex)) +
+  geom_density(linewidth = 1, alpha = 0.5) +
+  labs(x = 'Age', y = 'Number of People') +
+  xlim(0, 100) +
+  scale_fill_manual(values = c('Male' = 'skyblue', 'Female' = 'pink'))
 
-hist(df$age[df$sex == 'Female'],
-     xlim = c(0, 100),
-     main = 'Age Distribution for Females',
-     xlab = 'Age',
-     col = 'pink2')
+df |> 
+  ggplot(aes(x = sex, y = age, fill = sex)) +
+  geom_boxplot() +
+  labs(x = 'Sex', y = 'Age') +
+  scale_fill_manual(values = c('Male' = 'skyblue', 'Female' = 'pink'))
 
-par(mfrow = c(1, 2))
-
-boxplot(df$age[df$sex == 'Male'],
-        ylim = c(0, 100),
-        main = 'Age Distribution for Males',
-        ylab = 'Age',
-        col = 'blue2')
-
-boxplot(df$age[df$sex == 'Female'],
-        ylim = c(0, 100),
-        main = 'Age Distribution for Females',
-        ylab = 'Age',
-        col = 'pink2')
-
-par(mfrow = c(1, 1)) # clear parameter
 
 ## {Age & Sex Conclusion}: The age of men participating in the survey is lower than women
 
@@ -136,7 +128,7 @@ df |>
   summarise(n = n()) |>
   mutate(race = factor(race, levels = race[order(n)])) |>
   ggplot(aes(x = n, y = race)) +
-  geom_bar(stat = "identity", fill = 'blue2') +
+  geom_bar(stat = 'identity', fill = 'blue2') +
   labs(title = 'Race Distribution', x = 'Total Number', y = 'Race') +
   theme_minimal()
 
